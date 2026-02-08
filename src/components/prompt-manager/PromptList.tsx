@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Plus, Edit, Trash2, CheckCircle } from 'lucide-react';
+import { Plus, Edit, Trash2, CheckCircle, Copy } from 'lucide-react';
 import { Prompt } from '@/types';
 import { useStore } from '@/store';
-import { deletePrompt } from '@/services/storage/prompts';
+import { deletePrompt, savePrompt } from '@/services/storage/prompts';
 import { formatDateTime } from '@/utils/format';
 import toast from 'react-hot-toast';
 
@@ -19,6 +19,7 @@ export const PromptList = ({ prompts, onCreateNew, onEdit }: PromptListProps) =>
   const activePromptId = useStore((state) => state.activePromptId);
   const setActivePrompt = useStore((state) => state.setActivePrompt);
   const removePrompt = useStore((state) => state.removePrompt);
+  const addPrompt = useStore((state) => state.addPrompt);
 
   const handleDelete = async (promptId: string) => {
     if (confirm(t('list.deleteConfirm'))) {
@@ -31,6 +32,21 @@ export const PromptList = ({ prompts, onCreateNew, onEdit }: PromptListProps) =>
   const handleSetActive = (promptId: string) => {
     setActivePrompt(promptId);
     toast.success(t('list.activeUpdated'));
+  };
+
+  const handleDuplicate = async (prompt: Prompt) => {
+    const now = new Date();
+    const duplicatedPrompt: Prompt = {
+      ...prompt,
+      id: `${Date.now()}-${Math.random()}`,
+      name: `${prompt.name} (Copy)`,
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    await savePrompt(duplicatedPrompt);
+    addPrompt(duplicatedPrompt);
+    toast.success(t('list.duplicated'));
   };
 
   if (prompts.length === 0) {
@@ -102,6 +118,14 @@ export const PromptList = ({ prompts, onCreateNew, onEdit }: PromptListProps) =>
                       {t('list.setActive')}
                     </Button>
                   )}
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={() => handleDuplicate(prompt)}
+                    title="Duplicate prompt"
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
                   <Button
                     size="icon"
                     variant="ghost"
