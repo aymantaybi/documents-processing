@@ -1,8 +1,10 @@
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Settings, FileText } from 'lucide-react';
 import { useStore } from '@/store';
 
 export const Header = () => {
+  const { t } = useTranslation('common');
   const setSettingsOpen = useStore((state) => state.setSettingsOpen);
   const setPromptManagerOpen = useStore((state) => state.setPromptManagerOpen);
 
@@ -11,7 +13,7 @@ export const Header = () => {
       <div className="container flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-2">
           <FileText className="h-6 w-6" />
-          <h1 className="text-xl font-bold">Document Processing</h1>
+          <h1 className="text-xl font-bold">{t('header.title')}</h1>
         </div>
         <div className="flex items-center gap-2">
           <Button
@@ -20,7 +22,7 @@ export const Header = () => {
             onClick={() => setPromptManagerOpen(true)}
           >
             <FileText className="mr-2 h-4 w-4" />
-            Prompts
+            {t('header.prompts')}
           </Button>
           <Button
             variant="outline"

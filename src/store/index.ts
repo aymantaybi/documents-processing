@@ -29,6 +29,7 @@ export const useStore = create<StoreState>()(
           openaiApiKey: state.openaiApiKey,
           rateLimit: state.rateLimit,
           autoSaveResults: state.autoSaveResults,
+          language: state.language,
         }),
       }
     ),

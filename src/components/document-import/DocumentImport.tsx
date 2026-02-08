@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDropzone } from 'react-dropzone';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,6 +11,7 @@ import toast from 'react-hot-toast';
 import { formatFileSize } from '@/utils/format';
 
 export const DocumentImport = () => {
+  const { t } = useTranslation('document');
   const documents = useStore((state) => state.documents);
   const addDocument = useStore((state) => state.addDocument);
   const removeDocument = useStore((state) => state.removeDocument);
@@ -18,13 +20,13 @@ export const DocumentImport = () => {
     async (acceptedFiles: File[]) => {
       for (const file of acceptedFiles) {
         if (!validateDocumentFile(file)) {
-          toast.error(`${file.name}: Unsupported file type`);
+          toast.error(t('import.unsupportedType', { name: file.name }));
           continue;
         }
 
         const type = getDocumentType(file);
         if (type === 'unsupported') {
-          toast.error(`${file.name}: Unsupported file type`);
+          toast.error(t('import.unsupportedType', { name: file.name }));
           continue;
         }
 
@@ -39,10 +41,10 @@ export const DocumentImport = () => {
 
         await saveDocument(document);
         addDocument(document);
-        toast.success(`Added: ${file.name}`);
+        toast.success(t('import.added', { name: file.name }));
       }
     },
-    [addDocument]
+    [addDocument, t]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -57,7 +59,7 @@ export const DocumentImport = () => {
 
   const handleRemove = async (id: string) => {
     removeDocument(id);
-    toast.success('Document removed');
+    toast.success(t('import.removed'));
   };
 
   return (
@@ -80,11 +82,11 @@ export const DocumentImport = () => {
             <Upload className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
             <p className="text-sm font-medium mb-1">
               {isDragActive
-                ? 'Drop files here...'
-                : 'Drag & drop documents here, or click to select'}
+                ? t('import.dropzoneActive')
+                : t('import.dropzone')}
             </p>
             <p className="text-xs text-muted-foreground">
-              Supports PDF and images (JPG, PNG, WebP)
+              {t('import.supportedFormats')}
             </p>
           </div>
         </CardContent>
@@ -94,7 +96,7 @@ export const DocumentImport = () => {
         <Card>
           <CardContent className="pt-6">
             <h3 className="font-medium mb-4">
-              Documents ({documents.length})
+              {t('import.documentCount', { count: documents.length })}
             </h3>
             <div className="space-y-2">
               {documents.map((doc) => (

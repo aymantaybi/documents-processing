@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -14,6 +15,7 @@ import { validateAgainstSchema } from '@/services/validation/validator';
 import toast from 'react-hot-toast';
 
 export const BatchProcessor = () => {
+  const { t } = useTranslation('batch');
   const documents = useStore((state) => state.documents);
   const activePromptId = useStore((state) => state.activePromptId);
   const prompts = useStore((state) => state.prompts);
@@ -30,17 +32,17 @@ export const BatchProcessor = () => {
 
   const handleProcess = async () => {
     if (!isOpenAIInitialized()) {
-      toast.error('Please set your OpenAI API key in Settings');
+      toast.error(t('errors.noApiKey'));
       return;
     }
 
     if (!activePrompt) {
-      toast.error('Please select an active prompt');
+      toast.error(t('errors.noActivePrompt'));
       return;
     }
 
     if (pendingDocs.length === 0) {
-      toast.error('No documents to process');
+      toast.error(t('errors.noDocuments'));
       return;
     }
 
@@ -107,7 +109,7 @@ export const BatchProcessor = () => {
         });
 
         setProgress((prev) => ({ ...prev, completed: prev.completed + 1 }));
-        toast.success(`Processed: ${doc.name}`);
+        toast.success(t('messages.processed', { name: doc.name }));
       } catch (error: any) {
         console.error('Processing error:', error);
 
@@ -122,13 +124,13 @@ export const BatchProcessor = () => {
         });
 
         setProgress((prev) => ({ ...prev, failed: prev.failed + 1 }));
-        toast.error(`Failed: ${doc.name}`);
+        toast.error(t('messages.failed', { name: doc.name }));
       }
     }
 
     setCurrentDoc(null);
     setIsProcessing(false);
-    toast.success('Batch processing complete!');
+    toast.success(t('messages.batchComplete'));
   };
 
   if (!activePrompt) {
@@ -138,7 +140,7 @@ export const BatchProcessor = () => {
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <AlertCircle className="h-12 w-12 text-muted-foreground mb-4" />
             <p className="text-sm text-muted-foreground mb-4">
-              No active prompt selected. Create and select a prompt to process documents.
+              {t('errors.noActivePromptMessage')}
             </p>
           </div>
         </CardContent>
@@ -149,24 +151,23 @@ export const BatchProcessor = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Batch Processing</CardTitle>
+        <CardTitle>{t('title')}</CardTitle>
         <CardDescription>
-          Active Prompt: <strong>{activePrompt.name}</strong>
+          {t('activePrompt', { name: activePrompt.name })}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {!isProcessing && (
           <div className="flex items-center justify-between">
             <div className="text-sm text-muted-foreground">
-              {pendingDocs.length} document{pendingDocs.length !== 1 ? 's' : ''} ready
-              to process
+              {t('readyToProcess', { count: pendingDocs.length })}
             </div>
             <Button
               onClick={handleProcess}
               disabled={pendingDocs.length === 0 || !isOpenAIInitialized()}
             >
               <Play className="mr-2 h-4 w-4" />
-              Process Documents
+              {t('processDocuments')}
             </Button>
           </div>
         )}
@@ -175,7 +176,7 @@ export const BatchProcessor = () => {
           <div className="space-y-4">
             <div>
               <div className="flex justify-between text-sm mb-2">
-                <span className="text-muted-foreground">Processing...</span>
+                <span className="text-muted-foreground">{t('progress.processing')}</span>
                 <span className="font-medium">
                   {progress.completed + progress.failed} / {progress.total}
                 </span>
@@ -189,16 +190,16 @@ export const BatchProcessor = () => {
 
             {currentDoc && (
               <div className="text-sm text-muted-foreground">
-                Current: {currentDoc}
+                {t('progress.current', { name: currentDoc })}
               </div>
             )}
 
             <div className="flex items-center gap-4 text-sm">
               <span className="text-green-600">
-                ✓ Completed: {progress.completed}
+                {t('progress.completedCount', { count: progress.completed })}
               </span>
               {progress.failed > 0 && (
-                <span className="text-red-600">✗ Failed: {progress.failed}</span>
+                <span className="text-red-600">{t('progress.failedCount', { count: progress.failed })}</span>
               )}
             </div>
           </div>

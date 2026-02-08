@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, AlertCircle } from 'lucide-react';
@@ -11,6 +12,7 @@ interface DocumentViewerProps {
 }
 
 export const DocumentViewer = ({ promptId }: DocumentViewerProps) => {
+  const { t } = useTranslation(['document', 'common']);
   const documents = useStore((state) => state.documents);
   const currentIndex = useStore((state) => state.currentIndex);
   const navigateNext = useStore((state) => state.navigateNext);
@@ -33,7 +35,7 @@ export const DocumentViewer = ({ promptId }: DocumentViewerProps) => {
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <AlertCircle className="h-12 w-12 text-muted-foreground mb-4" />
             <p className="text-sm text-muted-foreground">
-              No active prompt selected.
+              {t('document:viewer.noActivePrompt')}
             </p>
           </div>
         </CardContent>
@@ -45,14 +47,14 @@ export const DocumentViewer = ({ promptId }: DocumentViewerProps) => {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Document Viewer</CardTitle>
-          <CardDescription>View processed documents</CardDescription>
+          <CardTitle>{t('document:viewer.title')}</CardTitle>
+          <CardDescription>{t('document:viewer.description')}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <AlertCircle className="h-12 w-12 text-muted-foreground mb-4" />
             <p className="text-sm text-muted-foreground">
-              No documents to display. Process documents to view them here.
+              {t('document:viewer.noDocuments')}
             </p>
           </div>
         </CardContent>
@@ -67,7 +69,7 @@ export const DocumentViewer = ({ promptId }: DocumentViewerProps) => {
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <AlertCircle className="h-12 w-12 text-muted-foreground mb-4" />
             <p className="text-sm text-muted-foreground">
-              Document not found.
+              {t('document:viewer.documentNotFound')}
             </p>
           </div>
         </CardContent>
@@ -101,14 +103,14 @@ export const DocumentViewer = ({ promptId }: DocumentViewerProps) => {
     : 1;
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="flex flex-col h-[calc(100vh-20rem)]">
+      <CardHeader className="flex-shrink-0">
         <div className="flex items-center justify-between">
           <div>
             <CardTitle>{currentDoc.name}</CardTitle>
             <CardDescription>
-              Document {currentIndex + 1} of {completedDocs.length}
-              {currentDoc.type === 'pdf' && ` • Page ${pageNumber} of ${totalPages}`}
+              {t('document:viewer.documentCount', { current: currentIndex + 1, total: completedDocs.length })}
+              {currentDoc.type === 'pdf' && ` • ${t('document:viewer.page', { current: pageNumber, total: totalPages })}`}
             </CardDescription>
           </div>
           <div className="flex gap-2">
@@ -119,7 +121,7 @@ export const DocumentViewer = ({ promptId }: DocumentViewerProps) => {
               disabled={currentIndex === 0 && pageNumber === 1}
             >
               <ChevronLeft className="h-4 w-4 mr-1" />
-              Previous
+              {t('common:buttons.previous')}
             </Button>
             <Button
               variant="outline"
@@ -127,14 +129,14 @@ export const DocumentViewer = ({ promptId }: DocumentViewerProps) => {
               onClick={handleNext}
               disabled={currentIndex === completedDocs.length - 1 && pageNumber === totalPages}
             >
-              Next
+              {t('common:buttons.next')}
               <ChevronRight className="h-4 w-4 ml-1" />
             </Button>
           </div>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className="bg-muted/30 rounded-lg p-4 min-h-[600px] flex items-center justify-center">
+      <CardContent className="flex-1 overflow-y-auto">
+        <div className="bg-muted/30 rounded-lg p-4 min-h-full flex items-center justify-center">
           {currentDoc.type === 'pdf' && currentDoc.imageData ? (
             <PDFViewer
               imageData={currentDoc.imageData}

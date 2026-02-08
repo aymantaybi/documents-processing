@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -123,6 +124,7 @@ const fieldsToSchema = (fields: FieldConfig[]): { properties: Record<string, JSO
 };
 
 export const SchemaBuilder = ({ schema, onChange }: SchemaBuilderProps) => {
+  const { t } = useTranslation('prompt');
   const [fields, setFields] = useState<FieldConfig[]>(() =>
     parseSchemaToFields(schema.properties || {}, schema.required || [])
   );
@@ -215,8 +217,8 @@ export const SchemaBuilder = ({ schema, onChange }: SchemaBuilderProps) => {
   return (
     <Tabs value={mode} onValueChange={(v) => setMode(v as 'builder' | 'json')}>
       <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="builder">Visual Builder</TabsTrigger>
-        <TabsTrigger value="json">Raw JSON</TabsTrigger>
+        <TabsTrigger value="builder">{t('schema.builder')}</TabsTrigger>
+        <TabsTrigger value="json">{t('schema.json')}</TabsTrigger>
       </TabsList>
 
       <TabsContent value="builder" className="space-y-4">
@@ -239,12 +241,12 @@ export const SchemaBuilder = ({ schema, onChange }: SchemaBuilderProps) => {
           className="w-full"
         >
           <Plus className="h-4 w-4 mr-2" />
-          Add Field
+          {t('schema.addField')}
         </Button>
 
         {fields.length === 0 && (
           <div className="text-center py-8 text-muted-foreground text-sm">
-            No fields yet. Click "Add Field" to get started.
+            {t('schema.noFieldsYet')}
           </div>
         )}
       </TabsContent>
@@ -269,6 +271,7 @@ interface FieldEditorProps {
 }
 
 const FieldEditor = ({ field, onUpdate, onRemove, depth = 0 }: FieldEditorProps) => {
+  const { t } = useTranslation('prompt');
   const [isExpanded, setIsExpanded] = useState(false);
   const [showNested, setShowNested] = useState(true);
 
@@ -391,7 +394,7 @@ const FieldEditor = ({ field, onUpdate, onRemove, depth = 0 }: FieldEditorProps)
             </Button>
             <div className="flex-1 grid grid-cols-3 gap-2">
               <Input
-                placeholder="Field name"
+                placeholder={t('schema.fieldNamePlaceholder')}
                 value={field.name}
                 onChange={(e) => onUpdate({ name: e.target.value })}
                 className="h-8"
@@ -425,7 +428,7 @@ const FieldEditor = ({ field, onUpdate, onRemove, depth = 0 }: FieldEditorProps)
                   onChange={(e) => onUpdate({ required: e.target.checked })}
                   className="rounded"
                 />
-                Required
+                {t('schema.required')}
               </label>
             </div>
             <Button
@@ -444,9 +447,9 @@ const FieldEditor = ({ field, onUpdate, onRemove, depth = 0 }: FieldEditorProps)
       {isExpanded && (
         <CardContent className="space-y-3 pt-0">
           <div className="space-y-2">
-            <Label className="text-xs">Description</Label>
+            <Label className="text-xs">{t('schema.fieldDescription')}</Label>
             <Input
-              placeholder="Field description"
+              placeholder={t('schema.fieldDescriptionPlaceholder')}
               value={field.property.description || ''}
               onChange={(e) =>
                 onUpdate({
@@ -459,7 +462,7 @@ const FieldEditor = ({ field, onUpdate, onRemove, depth = 0 }: FieldEditorProps)
 
           {(field.property.type === 'string' || field.property.type === 'number') && (
             <div className="space-y-2">
-              <Label className="text-xs">Format</Label>
+              <Label className="text-xs">{t('schema.format')}</Label>
               <Select
                 value={field.property.format || 'none'}
                 onValueChange={(format) =>
@@ -488,7 +491,7 @@ const FieldEditor = ({ field, onUpdate, onRemove, depth = 0 }: FieldEditorProps)
           {field.property.type === 'string' && (
             <div className="grid grid-cols-2 gap-2">
               <div className="space-y-2">
-                <Label className="text-xs">Min Length</Label>
+                <Label className="text-xs">{t('schema.minLength')}</Label>
                 <Input
                   type="number"
                   placeholder="0"
@@ -505,7 +508,7 @@ const FieldEditor = ({ field, onUpdate, onRemove, depth = 0 }: FieldEditorProps)
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-xs">Max Length</Label>
+                <Label className="text-xs">{t('schema.maxLength')}</Label>
                 <Input
                   type="number"
                   placeholder="∞"
@@ -527,7 +530,7 @@ const FieldEditor = ({ field, onUpdate, onRemove, depth = 0 }: FieldEditorProps)
           {field.property.type === 'number' && (
             <div className="grid grid-cols-2 gap-2">
               <div className="space-y-2">
-                <Label className="text-xs">Minimum</Label>
+                <Label className="text-xs">{t('schema.minimum')}</Label>
                 <Input
                   type="number"
                   placeholder="-∞"
@@ -544,7 +547,7 @@ const FieldEditor = ({ field, onUpdate, onRemove, depth = 0 }: FieldEditorProps)
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-xs">Maximum</Label>
+                <Label className="text-xs">{t('schema.maximum')}</Label>
                 <Input
                   type="number"
                   placeholder="∞"
@@ -566,7 +569,7 @@ const FieldEditor = ({ field, onUpdate, onRemove, depth = 0 }: FieldEditorProps)
           {field.property.type === 'object' && (
             <div className="space-y-3 border-l-2 border-primary/20 pl-3">
               <div className="flex items-center justify-between">
-                <Label className="text-xs font-semibold">Object Properties</Label>
+                <Label className="text-xs font-semibold">{t('schema.objectProperties')}</Label>
                 <Button
                   type="button"
                   variant="ghost"
@@ -577,12 +580,12 @@ const FieldEditor = ({ field, onUpdate, onRemove, depth = 0 }: FieldEditorProps)
                   {showNested ? (
                     <>
                       <ChevronDown className="h-3 w-3 mr-1" />
-                      Hide
+                      {t('schema.hide')}
                     </>
                   ) : (
                     <>
                       <ChevronRight className="h-3 w-3 mr-1" />
-                      Show
+                      {t('schema.show')}
                     </>
                   )}
                 </Button>
@@ -610,12 +613,12 @@ const FieldEditor = ({ field, onUpdate, onRemove, depth = 0 }: FieldEditorProps)
                     className="w-full h-7 text-xs"
                   >
                     <Plus className="h-3 w-3 mr-1" />
-                    Add Property
+                    {t('schema.addProperty')}
                   </Button>
 
                   {(!field.nested || field.nested.length === 0) && (
                     <div className="text-center py-4 text-xs text-muted-foreground">
-                      No properties yet
+                      {t('schema.noProperties')}
                     </div>
                   )}
                 </>
@@ -626,7 +629,7 @@ const FieldEditor = ({ field, onUpdate, onRemove, depth = 0 }: FieldEditorProps)
           {field.property.type === 'array' && (
             <div className="space-y-3 border-l-2 border-primary/20 pl-3">
               <div className="space-y-2">
-                <Label className="text-xs font-semibold">Array Item Type</Label>
+                <Label className="text-xs font-semibold">{t('schema.arrayItemType')}</Label>
                 <Select
                   value={getArrayItemType()}
                   onValueChange={(type) => handleArrayItemTypeChange(type as JSONSchemaProperty['type'])}
@@ -647,7 +650,7 @@ const FieldEditor = ({ field, onUpdate, onRemove, depth = 0 }: FieldEditorProps)
               {getArrayItemType() === 'object' && (
                 <>
                   <div className="flex items-center justify-between">
-                    <Label className="text-xs font-semibold">Item Properties</Label>
+                    <Label className="text-xs font-semibold">{t('schema.itemProperties')}</Label>
                     <Button
                       type="button"
                       variant="ghost"
@@ -658,12 +661,12 @@ const FieldEditor = ({ field, onUpdate, onRemove, depth = 0 }: FieldEditorProps)
                       {showNested ? (
                         <>
                           <ChevronDown className="h-3 w-3 mr-1" />
-                          Hide
+                          {t('schema.hide')}
                         </>
                       ) : (
                         <>
                           <ChevronRight className="h-3 w-3 mr-1" />
-                          Show
+                          {t('schema.show')}
                         </>
                       )}
                     </Button>
@@ -691,12 +694,12 @@ const FieldEditor = ({ field, onUpdate, onRemove, depth = 0 }: FieldEditorProps)
                         className="w-full h-7 text-xs"
                       >
                         <Plus className="h-3 w-3 mr-1" />
-                        Add Property
+                        {t('schema.addProperty')}
                       </Button>
 
                       {(!field.arrayItems || field.arrayItems.length === 0) && (
                         <div className="text-center py-4 text-xs text-muted-foreground">
-                          No properties yet
+                          {t('schema.noProperties')}
                         </div>
                       )}
                     </>

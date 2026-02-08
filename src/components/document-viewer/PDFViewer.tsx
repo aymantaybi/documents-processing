@@ -21,11 +21,11 @@ export const PDFViewer = ({ imageData, pageNumber }: PDFViewerProps) => {
   }
 
   const handleZoomIn = () => {
-    setZoom(Math.min(zoom + 25, 200));
+    setZoom(Math.min(zoom + 25, 400));
   };
 
   const handleZoomOut = () => {
-    setZoom(Math.max(zoom - 25, 50));
+    setZoom(Math.max(zoom - 25, 25));
   };
 
   return (
@@ -35,7 +35,7 @@ export const PDFViewer = ({ imageData, pageNumber }: PDFViewerProps) => {
           variant="outline"
           size="sm"
           onClick={handleZoomOut}
-          disabled={zoom <= 50}
+          disabled={zoom <= 25}
         >
           <ZoomOut className="h-4 w-4" />
         </Button>
@@ -46,7 +46,7 @@ export const PDFViewer = ({ imageData, pageNumber }: PDFViewerProps) => {
           variant="outline"
           size="sm"
           onClick={handleZoomIn}
-          disabled={zoom >= 200}
+          disabled={zoom >= 400}
         >
           <ZoomIn className="h-4 w-4" />
         </Button>

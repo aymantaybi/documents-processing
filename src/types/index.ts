@@ -3,10 +3,13 @@ export * from './prompt';
 export * from './processing';
 export * from './schema';
 
+export type Language = 'en' | 'fr';
+
 export interface AppSettings {
   openaiApiKey: string | null;
   rateLimit: number; // requests per minute
   autoSaveResults: boolean;
+  language: Language;
 }
 
 export interface UIState {

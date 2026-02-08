@@ -46,9 +46,9 @@ export const SplitView = ({ promptId }: SplitViewProps) => {
   };
 
   return (
-    <div ref={containerRef} className="flex gap-4 h-full">
+    <div ref={containerRef} className="flex gap-4 h-[calc(100vh-16rem)] sticky top-4">
       {/* Left Panel - Data Table */}
-      <div style={{ width: `${splitViewRatio}%` }} className="min-w-0">
+      <div style={{ width: `${splitViewRatio}%` }} className="min-w-0 overflow-y-auto">
         <DataTable promptId={promptId} />
       </div>
 
@@ -62,7 +62,7 @@ export const SplitView = ({ promptId }: SplitViewProps) => {
       />
 
       {/* Right Panel - Document Viewer */}
-      <div style={{ width: `${100 - splitViewRatio - 0.5}%` }} className="min-w-0">
+      <div style={{ width: `${100 - splitViewRatio - 0.5}%` }} className="min-w-0 overflow-y-auto">
         <DocumentViewer promptId={promptId} />
       </div>
     </div>

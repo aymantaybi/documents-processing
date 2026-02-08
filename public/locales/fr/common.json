@@ -1,0 +1,65 @@
+{
+  "appTitle": "Traitement de Documents",
+  "appDescription": "Traiter des documents avec extraction de données par IA",
+  "buttons": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "create": "Créer",
+    "update": "Mettre à jour",
+    "close": "Fermer",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "add": "Ajouter",
+    "remove": "Retirer",
+    "import": "Importer",
+    "export": "Exporter",
+    "process": "Traiter",
+    "retry": "Réessayer",
+    "pause": "Pause",
+    "resume": "Reprendre",
+    "clear": "Effacer"
+  },
+  "status": {
+    "pending": "En attente",
+    "processing": "En cours",
+    "completed": "Terminé",
+    "error": "Erreur",
+    "success": "Succès",
+    "failed": "Échoué"
+  },
+  "messages": {
+    "loading": "Chargement...",
+    "noData": "Aucune donnée disponible",
+    "error": "Une erreur s'est produite",
+    "success": "Opération réussie",
+    "confirm": "Êtes-vous sûr?",
+    "saved": "Enregistré avec succès",
+    "deleted": "Supprimé avec succès",
+    "updated": "Mis à jour avec succès",
+    "created": "Créé avec succès"
+  },
+  "validation": {
+    "required": "Ce champ est requis",
+    "invalid": "Format invalide",
+    "minLength": "La longueur minimale est {{min}}",
+    "maxLength": "La longueur maximale est {{max}}",
+    "errors": "Erreurs de validation"
+  },
+  "dataTable": {
+    "title": "Données Extraites",
+    "description": "Résultats des documents traités",
+    "documentColumn": "Document",
+    "documentsProcessed": "{{count}} document(s) traité(s)",
+    "doubleClickToEdit": "Double-cliquez sur les cellules pour modifier",
+    "noProcessedDocuments": "Aucun document traité pour le moment. Traitez des documents pour voir les résultats ici.",
+    "noActivePrompt": "Aucun prompt actif sélectionné. Veuillez sélectionner un prompt pour voir les résultats.",
+    "valueUpdated": "Valeur mise à jour",
+    "failedToUpdate": "Échec de la mise à jour de la valeur"
+  },
+  "header": {
+    "title": "Traitement de Documents",
+    "prompts": "Prompts"
+  }
+}

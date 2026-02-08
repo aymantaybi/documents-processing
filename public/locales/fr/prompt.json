@@ -1,0 +1,96 @@
+{
+  "manager": {
+    "title": "Gestionnaire de Prompts",
+    "description": "Créer et gérer des prompts avec des schémas JSON pour le traitement de documents.",
+    "tabs": {
+      "list": "Prompts Enregistrés",
+      "editor": "Créer Nouveau",
+      "editPrompt": "Modifier le Prompt"
+    }
+  },
+  "list": {
+    "empty": "Aucun prompt créé pour le moment",
+    "emptyDescription": "Créez votre premier prompt pour commencer à traiter des documents",
+    "createFirst": "Créer Votre Premier Prompt",
+    "createNew": "Créer Nouveau",
+    "setActive": "Définir comme Actif",
+    "fields": "champs",
+    "columns": "colonnes",
+    "updated": "Mis à jour {{date}}",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce prompt ?",
+    "deleted": "Prompt supprimé",
+    "activeUpdated": "Prompt actif mis à jour",
+    "prompt_one": "{{count}} prompt",
+    "prompt_other": "{{count}} prompts"
+  },
+  "editor": {
+    "name": "Nom du Prompt",
+    "namePlaceholder": "ex., Extraction de Données de Facture",
+    "description": "Description",
+    "descriptionPlaceholder": "Description optionnelle",
+    "systemPrompt": "Prompt Système",
+    "systemPromptPlaceholder": "Instructions pour l'IA. ex., 'Extraire toutes les informations de facture du document, y compris le numéro de facture, la date, les détails du client et les articles.'",
+    "jsonSchema": "Schéma JSON",
+    "schemaHelp": "Définissez la structure des données à extraire. Les colonnes du tableau seront générées automatiquement à partir du schéma.",
+    "validation": {
+      "nameRequired": "Le nom est requis",
+      "systemPromptRequired": "Le prompt système est requis",
+      "schemaInvalid": "Format de schéma JSON invalide",
+      "fixErrors": "Veuillez corriger les erreurs de validation"
+    },
+    "success": {
+      "created": "Prompt créé",
+      "updated": "Prompt mis à jour"
+    },
+    "error": {
+      "save": "Échec de l'enregistrement du prompt"
+    }
+  },
+  "schema": {
+    "builder": "Constructeur Visuel",
+    "json": "JSON Brut",
+    "addField": "Ajouter un Champ",
+    "removeField": "Retirer le Champ",
+    "fieldName": "Nom du Champ",
+    "fieldNamePlaceholder": "Nom du champ",
+    "fieldType": "Type",
+    "required": "Requis",
+    "optional": "Optionnel",
+    "fieldDescription": "Description",
+    "fieldDescriptionPlaceholder": "Description du champ",
+    "format": "Format",
+    "constraints": "Contraintes",
+    "minimum": "Minimum",
+    "maximum": "Maximum",
+    "minLength": "Longueur Min",
+    "maxLength": "Longueur Max",
+    "enumValues": "Valeurs Enum",
+    "objectProperties": "Propriétés de l'Objet",
+    "arrayItemType": "Type d'Élément du Tableau",
+    "itemProperties": "Propriétés de l'Élément",
+    "noProperties": "Aucune propriété pour le moment",
+    "noFieldsYet": "Aucun champ pour le moment. Cliquez sur \"Ajouter un Champ\" pour commencer.",
+    "addProperty": "Ajouter une Propriété",
+    "show": "Afficher",
+    "hide": "Masquer",
+    "types": {
+      "string": "Texte",
+      "number": "Nombre",
+      "boolean": "Booléen",
+      "object": "Objet",
+      "array": "Tableau",
+      "null": "Nul"
+    },
+    "formats": {
+      "none": "Aucun",
+      "date": "Date",
+      "dateTime": "Date et Heure",
+      "email": "Email",
+      "uri": "URI",
+      "int32": "Entier 32",
+      "int64": "Entier 64",
+      "float": "Flottant",
+      "double": "Double"
+    }
+  }
+}

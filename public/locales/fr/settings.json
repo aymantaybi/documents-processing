@@ -1,0 +1,35 @@
+{
+  "title": "Paramètres",
+  "openai": {
+    "title": "Configuration OpenAI",
+    "apiKey": "Clé API",
+    "apiKeyPlaceholder": "Entrez votre clé API OpenAI",
+    "apiKeyHelp": "Votre clé API est stockée localement dans votre navigateur et n'est jamais envoyée à nos serveurs.",
+    "apiKeyRequired": "La clé API OpenAI est requise pour traiter les documents",
+    "apiKeyInvalid": "Format de clé API invalide",
+    "apiKeySaved": "Clé API enregistrée",
+    "getKey": "Obtenir une Clé API",
+    "model": "Modèle",
+    "modelHelp": "GPT-4o est recommandé pour de meilleurs résultats avec le traitement de documents"
+  },
+  "language": {
+    "title": "Langue",
+    "label": "Langue de l'Interface",
+    "english": "English",
+    "french": "Français"
+  },
+  "theme": {
+    "title": "Apparence",
+    "label": "Thème",
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Système"
+  },
+  "storage": {
+    "title": "Stockage",
+    "used": "Stockage utilisé",
+    "clearData": "Effacer Toutes les Données",
+    "clearConfirm": "Cela supprimera tous les documents, prompts et résultats. Êtes-vous sûr ?",
+    "cleared": "Toutes les données ont été effacées"
+  }
+}

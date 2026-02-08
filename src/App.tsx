@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MainLayout } from './components/layout/MainLayout';
 import { SplitView } from './components/layout/SplitView';
 import { Settings } from './components/settings/Settings';
@@ -11,7 +12,9 @@ import { useStore } from './store';
 import { initializeOpenAI } from './services/openai/client';
 
 function App() {
+  const { i18n, t } = useTranslation('common');
   const apiKey = useStore((state) => state.openaiApiKey);
+  const language = useStore((state) => state.language);
   const activePromptId = useStore((state) => state.activePromptId);
   const documents = useStore((state) => state.documents);
 
@@ -29,15 +32,21 @@ function App() {
     }
   }, [apiKey]);
 
+  // Sync language from store to i18next
+  useEffect(() => {
+    if (language && i18n.language !== language) {
+      i18n.changeLanguage(language);
+    }
+  }, [language, i18n]);
+
   return (
     <MainLayout>
       <div className="max-w-6xl mx-auto space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>Welcome to Document Processing</CardTitle>
+            <CardTitle>{t('appTitle')}</CardTitle>
             <CardDescription>
-              Import documents, create prompts with JSON schemas, and process documents
-              with OpenAI's vision API. Extract structured data from PDFs and images.
+              {t('appDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent>

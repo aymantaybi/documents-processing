@@ -1,0 +1,96 @@
+{
+  "manager": {
+    "title": "Prompt Manager",
+    "description": "Create and manage prompts with JSON schemas for document processing.",
+    "tabs": {
+      "list": "Saved Prompts",
+      "editor": "Create New",
+      "editPrompt": "Edit Prompt"
+    }
+  },
+  "list": {
+    "empty": "No prompts created yet",
+    "emptyDescription": "Create your first prompt to start processing documents",
+    "createFirst": "Create Your First Prompt",
+    "createNew": "Create New",
+    "setActive": "Set Active",
+    "fields": "fields",
+    "columns": "columns",
+    "updated": "Updated {{date}}",
+    "deleteConfirm": "Are you sure you want to delete this prompt?",
+    "deleted": "Prompt deleted",
+    "activeUpdated": "Active prompt updated",
+    "prompt_one": "{{count}} prompt",
+    "prompt_other": "{{count}} prompts"
+  },
+  "editor": {
+    "name": "Prompt Name",
+    "namePlaceholder": "e.g., Invoice Data Extraction",
+    "description": "Description",
+    "descriptionPlaceholder": "Optional description",
+    "systemPrompt": "System Prompt",
+    "systemPromptPlaceholder": "Instructions for AI. e.g., 'Extract all invoice information from the document including invoice number, date, customer details, and line items.'",
+    "jsonSchema": "JSON Schema",
+    "schemaHelp": "Define the structure of data to extract. Table columns will be generated automatically from the schema.",
+    "validation": {
+      "nameRequired": "Name is required",
+      "systemPromptRequired": "System prompt is required",
+      "schemaInvalid": "Invalid JSON schema format",
+      "fixErrors": "Please fix validation errors"
+    },
+    "success": {
+      "created": "Prompt created",
+      "updated": "Prompt updated"
+    },
+    "error": {
+      "save": "Failed to save prompt"
+    }
+  },
+  "schema": {
+    "builder": "Visual Builder",
+    "json": "Raw JSON",
+    "addField": "Add Field",
+    "removeField": "Remove Field",
+    "fieldName": "Field Name",
+    "fieldNamePlaceholder": "Field name",
+    "fieldType": "Type",
+    "required": "Required",
+    "optional": "Optional",
+    "fieldDescription": "Description",
+    "fieldDescriptionPlaceholder": "Field description",
+    "format": "Format",
+    "constraints": "Constraints",
+    "minimum": "Minimum",
+    "maximum": "Maximum",
+    "minLength": "Min Length",
+    "maxLength": "Max Length",
+    "enumValues": "Enum Values",
+    "objectProperties": "Object Properties",
+    "arrayItemType": "Array Item Type",
+    "itemProperties": "Item Properties",
+    "noProperties": "No properties yet",
+    "noFieldsYet": "No fields yet. Click \"Add Field\" to get started.",
+    "addProperty": "Add Property",
+    "show": "Show",
+    "hide": "Hide",
+    "types": {
+      "string": "Text",
+      "number": "Number",
+      "boolean": "Boolean",
+      "object": "Object",
+      "array": "Array",
+      "null": "Null"
+    },
+    "formats": {
+      "none": "None",
+      "date": "Date",
+      "dateTime": "Date Time",
+      "email": "Email",
+      "uri": "URI",
+      "int32": "Integer 32",
+      "int64": "Integer 64",
+      "float": "Float",
+      "double": "Double"
+    }
+  }
+}

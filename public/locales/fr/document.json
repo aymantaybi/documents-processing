@@ -1,0 +1,41 @@
+{
+  "import": {
+    "title": "Importer des Documents",
+    "dropzone": "Glissez-déposez des documents ici, ou cliquez pour sélectionner",
+    "dropzoneActive": "Déposez les fichiers ici...",
+    "supportedFormats": "Prend en charge les PDF et les images (JPG, PNG, WebP)",
+    "uploading": "Téléchargement...",
+    "success": "{{count}} document(s) importé(s)",
+    "error": "Échec de l'importation des documents",
+    "invalidType": "Type de fichier invalide. Seuls les PDF et les images sont pris en charge.",
+    "unsupportedType": "{{name}} : Type de fichier non pris en charge",
+    "added": "Ajouté : {{name}}",
+    "removed": "Document supprimé",
+    "documentCount": "Documents ({{count}})"
+  },
+  "viewer": {
+    "title": "Visionneuse de Documents",
+    "description": "Voir les documents traités",
+    "noDocument": "Aucun document sélectionné",
+    "noDocuments": "Aucun document à afficher. Traitez des documents pour les voir ici.",
+    "noActivePrompt": "Aucune invite active sélectionnée.",
+    "documentNotFound": "Document introuvable.",
+    "documentCount": "Document {{current}} sur {{total}}",
+    "page": "Page {{current}} sur {{total}}",
+    "zoom": "Zoom",
+    "zoomIn": "Zoom avant",
+    "zoomOut": "Zoom arrière",
+    "pageNotFound": "Page introuvable",
+    "loading": "Chargement du document..."
+  },
+  "list": {
+    "title": "Documents",
+    "empty": "Aucun document importé pour le moment",
+    "name": "Nom",
+    "type": "Type",
+    "status": "Statut",
+    "actions": "Actions",
+    "deleteConfirm": "Supprimer ce document ?",
+    "processing": "Traitement de {{current}} sur {{total}}"
+  }
+}

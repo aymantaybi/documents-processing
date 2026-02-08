@@ -1,26 +1,11 @@
-import { useMemo } from 'react';
-import {
-  useReactTable,
-  getCoreRowModel,
-  flexRender,
-  ColumnDef,
-} from '@tanstack/react-table';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, FileText, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { useStore } from '@/store';
-import { EditableCell } from './EditableCell';
-import { NestedJSONRenderer } from './NestedJSONRenderer';
-import { getNestedValue, setNestedValue } from '@/utils/json';
-import { ColumnConfig } from '@/types';
+import { RowJsonViewer } from './RowJsonViewer';
+import { setNestedValue } from '@/utils/json';
 import { updateResultEditedData } from '@/services/storage/results';
+import { cn } from '@/utils/cn';
 import toast from 'react-hot-toast';
 
 interface DataTableProps {
@@ -28,6 +13,7 @@ interface DataTableProps {
 }
 
 export const DataTable = ({ promptId }: DataTableProps) => {
+  const { t } = useTranslation('common');
   const prompts = useStore((state) => state.prompts);
   const documents = useStore((state) => state.documents);
   const results = useStore((state) => state.results);
@@ -38,113 +24,55 @@ export const DataTable = ({ promptId }: DataTableProps) => {
   const activePrompt = prompts.find((p) => p.id === promptId);
 
   // Get completed documents with results
-  const tableData = useMemo(() => {
-    const completedDocs = documents.filter((doc) => doc.status === 'completed');
-    return completedDocs
-      .map((doc) => {
-        const result = results[doc.id];
-        if (!result) return null;
+  const completedDocs = documents.filter((doc) => doc.status === 'completed');
+  const docsWithResults = completedDocs
+    .map((doc, index) => {
+      const result = results[doc.id];
+      if (!result) return null;
 
-        const dataToDisplay = result.editedData || result.data;
-        return {
-          _documentId: doc.id,
-          _documentName: doc.name,
-          _hasErrors: (result.validationErrors?.length ?? 0) > 0,
-          ...dataToDisplay,
-        };
-      })
-      .filter(Boolean) as Record<string, unknown>[];
-  }, [documents, results]);
+      const dataToDisplay = result.editedData || result.data;
+      const hasErrors = (result.validationErrors?.length ?? 0) > 0;
 
-  // Generate columns from UI config
-  const columns = useMemo<ColumnDef<Record<string, unknown>>[]>(() => {
-    if (!activePrompt) return [];
+      return {
+        doc,
+        data: dataToDisplay,
+        hasErrors,
+        validationErrors: result.validationErrors,
+        index,
+      };
+    })
+    .filter(Boolean) as Array<{
+    doc: typeof completedDocs[0];
+    data: Record<string, unknown>;
+    hasErrors: boolean;
+    validationErrors?: Array<{ field: string; message?: string }>;
+    index: number;
+  }>;
 
-    const cols: ColumnDef<Record<string, unknown>>[] = [
-      {
-        accessorKey: '_documentName',
-        header: 'Document',
-        cell: ({ row }) => {
-          const hasErrors = row.original._hasErrors as boolean;
-          return (
-            <div className="flex items-center gap-2">
-              <span className="font-medium">{row.original._documentName as string}</span>
-              {hasErrors && (
-                <span title="Validation errors">
-                  <AlertCircle className="h-4 w-4 text-destructive" />
-                </span>
-              )}
-            </div>
-          );
-        },
-        size: 200,
-      },
-    ];
+  const handleSave = async (documentId: string, path: string[], newValue: unknown) => {
+    try {
+      const result = results[documentId];
+      if (!result) return;
 
-    activePrompt.uiConfig.columns.forEach((colConfig: ColumnConfig) => {
-      cols.push({
-        accessorKey: colConfig.key,
-        header: colConfig.label,
-        size: colConfig.width,
-        cell: ({ row }) => {
-          const value = getNestedValue(row.original, colConfig.key);
-          const documentId = row.original._documentId as string;
+      // Get the current data (edited or original)
+      const currentData = result.editedData || result.data;
 
-          const handleSave = async (newValue: unknown) => {
-            try {
-              const result = results[documentId];
-              if (!result) return;
+      // Create a deep copy and update the value at the specified path
+      const updatedData = JSON.parse(JSON.stringify(currentData));
+      setNestedValue(updatedData, path.join('.'), newValue);
 
-              // Get the current data (edited or original)
-              const currentData = result.editedData || result.data;
+      // Save to IndexedDB
+      await updateResultEditedData(documentId, updatedData);
 
-              // Create a deep copy and update the value
-              const updatedData = JSON.parse(JSON.stringify(currentData));
-              setNestedValue(updatedData, colConfig.key, newValue);
+      // Update store
+      updateResult(documentId, updatedData);
 
-              // Save to IndexedDB
-              await updateResultEditedData(documentId, updatedData);
-
-              // Update store
-              updateResult(documentId, updatedData);
-
-              toast.success('Value updated');
-            } catch (error) {
-              console.error('Failed to update value:', error);
-              toast.error('Failed to update value');
-            }
-          };
-
-          if (colConfig.type === 'nested') {
-            return (
-              <NestedJSONRenderer
-                data={value}
-                strategy={activePrompt.uiConfig.nestedRenderStrategy}
-              />
-            );
-          }
-
-          return (
-            <EditableCell
-              value={value}
-              type={colConfig.type}
-              editable={colConfig.editable}
-              onSave={handleSave}
-              format={colConfig.format}
-            />
-          );
-        },
-      });
-    });
-
-    return cols;
-  }, [activePrompt, results, updateResult]);
-
-  const table = useReactTable({
-    data: tableData,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
+      toast.success(t('dataTable.valueUpdated'));
+    } catch (error) {
+      console.error('Failed to update value:', error);
+      toast.error(t('dataTable.failedToUpdate'));
+    }
+  };
 
   if (!activePrompt) {
     return (
@@ -153,7 +81,7 @@ export const DataTable = ({ promptId }: DataTableProps) => {
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <AlertCircle className="h-12 w-12 text-muted-foreground mb-4" />
             <p className="text-sm text-muted-foreground">
-              No active prompt selected. Please select a prompt to view results.
+              {t('dataTable.noActivePrompt')}
             </p>
           </div>
         </CardContent>
@@ -161,18 +89,18 @@ export const DataTable = ({ promptId }: DataTableProps) => {
     );
   }
 
-  if (tableData.length === 0) {
+  if (docsWithResults.length === 0) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Extracted Data</CardTitle>
-          <CardDescription>Results from processed documents</CardDescription>
+          <CardTitle>{t('dataTable.title')}</CardTitle>
+          <CardDescription>{t('dataTable.description')}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <AlertCircle className="h-12 w-12 text-muted-foreground mb-4" />
             <p className="text-sm text-muted-foreground">
-              No processed documents yet. Process some documents to see results here.
+              {t('dataTable.noProcessedDocuments')}
             </p>
           </div>
         </CardContent>
@@ -181,50 +109,91 @@ export const DataTable = ({ promptId }: DataTableProps) => {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Extracted Data</CardTitle>
-        <CardDescription>
-          {tableData.length} document{tableData.length !== 1 ? 's' : ''} processed
-          {' · '}
-          Double-click cells to edit
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id} style={{ width: header.getSize() }}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows.map((row, index) => (
-                <TableRow
-                  key={row.id}
-                  data-state={index === currentIndex ? 'selected' : undefined}
-                  onClick={() => setCurrentIndex(index)}
-                  className="cursor-pointer"
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="space-y-4">
+      <Card>
+        <CardHeader>
+          <CardTitle>{t('dataTable.title')}</CardTitle>
+          <CardDescription>
+            {t('dataTable.documentsProcessed', { count: docsWithResults.length })}
+            {' · '}
+            {t('dataTable.doubleClickToEdit')}
+          </CardDescription>
+        </CardHeader>
+      </Card>
+
+      <div className="space-y-3">
+        {docsWithResults.map(({ doc, data, hasErrors, validationErrors, index }) => (
+          <Card
+            key={doc.id}
+            className={cn(
+              'transition-all cursor-pointer hover:shadow-md flex flex-col max-h-[calc(100vh-20rem)]',
+              currentIndex === index && 'border-2 border-primary shadow-lg'
+            )}
+            onClick={() => setCurrentIndex(index)}
+          >
+            <CardHeader className="pb-3 flex-shrink-0">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start gap-3 flex-1 min-w-0">
+                  <FileText className="h-5 w-5 text-muted-foreground mt-0.5 flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <CardTitle className="text-base truncate">{doc.name}</CardTitle>
+                    <CardDescription className="flex items-center gap-2 mt-1">
+                      {hasErrors ? (
+                        <>
+                          <AlertTriangle className="h-3 w-3 text-destructive" />
+                          <span className="text-destructive text-xs">
+                            {validationErrors?.length} {t('validation.errors').toLowerCase()}
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle2 className="h-3 w-3 text-green-600" />
+                          <span className="text-green-600 text-xs">Valid</span>
+                        </>
+                      )}
+                      {doc.processedAt && (
+                        <>
+                          <span>•</span>
+                          <span className="text-xs">
+                            {new Date(doc.processedAt).toLocaleString()}
+                          </span>
+                        </>
+                      )}
+                    </CardDescription>
+                  </div>
+                </div>
+              </div>
+            </CardHeader>
+
+            <CardContent className="pt-0 flex-1 overflow-y-auto">
+              {hasErrors && validationErrors && validationErrors.length > 0 && (
+                <div className="mb-4 p-3 bg-destructive/10 border border-destructive/20 rounded-md">
+                  <p className="text-xs font-medium text-destructive mb-2">
+                    {t('validation.errors')}:
+                  </p>
+                  <ul className="space-y-1">
+                    {validationErrors.map((error, idx) => (
+                      <li key={idx} className="text-xs text-destructive/80 flex gap-2">
+                        <span className="font-mono">{error.field || 'unknown'}:</span>
+                        <span>{error.message || 'Validation failed'}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              <div className="bg-card rounded-lg border shadow-sm overflow-hidden">
+                <RowJsonViewer
+                  data={data}
+                  path={[]}
+                  editable={true}
+                  onSave={(path, newValue) => handleSave(doc.id, path, newValue)}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
   );
 };

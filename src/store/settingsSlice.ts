@@ -1,10 +1,11 @@
 import { StateCreator } from 'zustand';
-import { AppSettings } from '@/types';
+import { AppSettings, Language } from '@/types';
 
 export interface SettingsSlice extends AppSettings {
   setOpenAIApiKey: (key: string | null) => void;
   setRateLimit: (limit: number) => void;
   setAutoSaveResults: (autoSave: boolean) => void;
+  setLanguage: (language: Language) => void;
   clearSettings: () => void;
 }
 
@@ -12,6 +13,7 @@ const defaultSettings: AppSettings = {
   openaiApiKey: null,
   rateLimit: 10, // requests per minute
   autoSaveResults: true,
+  language: 'en',
 };
 
 export const createSettingsSlice: StateCreator<
@@ -27,6 +29,8 @@ export const createSettingsSlice: StateCreator<
   setRateLimit: (limit) => set({ rateLimit: Math.max(1, Math.min(60, limit)) }),
 
   setAutoSaveResults: (autoSave) => set({ autoSaveResults: autoSave }),
+
+  setLanguage: (language) => set({ language }),
 
   clearSettings: () => set(defaultSettings),
 });

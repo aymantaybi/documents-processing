@@ -1,0 +1,65 @@
+{
+  "appTitle": "Document Processing",
+  "appDescription": "Process documents with AI-powered data extraction",
+  "buttons": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "update": "Update",
+    "close": "Close",
+    "next": "Next",
+    "previous": "Previous",
+    "add": "Add",
+    "remove": "Remove",
+    "import": "Import",
+    "export": "Export",
+    "process": "Process",
+    "retry": "Retry",
+    "pause": "Pause",
+    "resume": "Resume",
+    "clear": "Clear"
+  },
+  "status": {
+    "pending": "Pending",
+    "processing": "Processing",
+    "completed": "Completed",
+    "error": "Error",
+    "success": "Success",
+    "failed": "Failed"
+  },
+  "messages": {
+    "loading": "Loading...",
+    "noData": "No data available",
+    "error": "An error occurred",
+    "success": "Operation successful",
+    "confirm": "Are you sure?",
+    "saved": "Saved successfully",
+    "deleted": "Deleted successfully",
+    "updated": "Updated successfully",
+    "created": "Created successfully"
+  },
+  "validation": {
+    "required": "This field is required",
+    "invalid": "Invalid format",
+    "minLength": "Minimum length is {{min}}",
+    "maxLength": "Maximum length is {{max}}",
+    "errors": "Validation errors"
+  },
+  "dataTable": {
+    "title": "Extracted Data",
+    "description": "Results from processed documents",
+    "documentColumn": "Document",
+    "documentsProcessed": "{{count}} document(s) processed",
+    "doubleClickToEdit": "Double-click cells to edit",
+    "noProcessedDocuments": "No processed documents yet. Process some documents to see results here.",
+    "noActivePrompt": "No active prompt selected. Please select a prompt to view results.",
+    "valueUpdated": "Value updated",
+    "failedToUpdate": "Failed to update value"
+  },
+  "header": {
+    "title": "Document Processing",
+    "prompts": "Prompts"
+  }
+}

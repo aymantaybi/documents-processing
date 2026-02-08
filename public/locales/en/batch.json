@@ -1,0 +1,55 @@
+{
+  "title": "Batch Processing",
+  "activePrompt": "Active Prompt: {{name}}",
+  "readyToProcess": "{{count}} document(s) ready to process",
+  "processDocuments": "Process Documents",
+  "selectPrompt": "Select a Prompt",
+  "selectPromptHelp": "Choose a prompt template to process your documents",
+  "noPrompts": "No prompts available",
+  "createPrompt": "Create a prompt first",
+  "startProcessing": "Start Processing",
+  "stopProcessing": "Stop Processing",
+  "pauseProcessing": "Pause Processing",
+  "resumeProcessing": "Resume Processing",
+  "retryFailed": "Retry Failed",
+  "progress": {
+    "title": "Processing Progress",
+    "processing": "Processing...",
+    "current": "Current: {{name}}",
+    "completed": "Completed",
+    "completedCount": "✓ Completed: {{count}}",
+    "failed": "Failed",
+    "failedCount": "✗ Failed: {{count}}",
+    "pending": "Pending",
+    "of": "of",
+    "documents": "documents",
+    "allCompleted": "All documents processed successfully",
+    "someErrors": "Processing completed with {{count}} error(s)",
+    "converting": "Converting document to images...",
+    "extracting": "Extracting data...",
+    "validating": "Validating results...",
+    "saving": "Saving results..."
+  },
+  "errors": {
+    "noApiKey": "Please set your OpenAI API key in Settings",
+    "noActivePrompt": "Please select an active prompt",
+    "noActivePromptMessage": "No active prompt selected. Create and select a prompt to process documents.",
+    "noDocuments": "No documents to process",
+    "noPrompt": "Please select a prompt",
+    "processingFailed": "Processing failed",
+    "conversionFailed": "Failed to convert document",
+    "apiError": "API error: {{message}}",
+    "validationFailed": "Validation failed"
+  },
+  "results": {
+    "title": "Processing Results",
+    "viewResults": "View Results",
+    "downloadResults": "Download Results",
+    "clearResults": "Clear Results"
+  },
+  "messages": {
+    "processed": "Processed: {{name}}",
+    "failed": "Failed: {{name}}",
+    "batchComplete": "Batch processing complete!"
+  }
+}

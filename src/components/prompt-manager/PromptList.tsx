@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Plus, Edit, Trash2, CheckCircle } from 'lucide-react';
@@ -14,30 +15,31 @@ interface PromptListProps {
 }
 
 export const PromptList = ({ prompts, onCreateNew, onEdit }: PromptListProps) => {
+  const { t } = useTranslation('prompt');
   const activePromptId = useStore((state) => state.activePromptId);
   const setActivePrompt = useStore((state) => state.setActivePrompt);
   const removePrompt = useStore((state) => state.removePrompt);
 
   const handleDelete = async (promptId: string) => {
-    if (confirm('Are you sure you want to delete this prompt?')) {
+    if (confirm(t('list.deleteConfirm'))) {
       await deletePrompt(promptId);
       removePrompt(promptId);
-      toast.success('Prompt deleted');
+      toast.success(t('list.deleted'));
     }
   };
 
   const handleSetActive = (promptId: string) => {
     setActivePrompt(promptId);
-    toast.success('Active prompt updated');
+    toast.success(t('list.activeUpdated'));
   };
 
   if (prompts.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
-        <p className="text-muted-foreground mb-4">No prompts created yet</p>
+        <p className="text-muted-foreground mb-4">{t('list.empty')}</p>
         <Button onClick={onCreateNew}>
           <Plus className="mr-2 h-4 w-4" />
-          Create Your First Prompt
+          {t('list.createFirst')}
         </Button>
       </div>
     );
@@ -47,11 +49,11 @@ export const PromptList = ({ prompts, onCreateNew, onEdit }: PromptListProps) =>
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <p className="text-sm text-muted-foreground">
-          {prompts.length} prompt{prompts.length !== 1 ? 's' : ''}
+          {t(`list.prompt_${prompts.length === 1 ? 'one' : 'other'}`, { count: prompts.length })}
         </p>
         <Button size="sm" onClick={onCreateNew}>
           <Plus className="mr-2 h-4 w-4" />
-          Create New
+          {t('list.createNew')}
         </Button>
       </div>
 
@@ -81,12 +83,12 @@ export const PromptList = ({ prompts, onCreateNew, onEdit }: PromptListProps) =>
                   )}
                   <div className="flex items-center gap-4 text-xs text-muted-foreground">
                     <span>
-                      {Object.keys(prompt.jsonSchema.properties).length} fields
+                      {Object.keys(prompt.jsonSchema.properties).length} {t('list.fields')}
                     </span>
                     <span>•</span>
-                    <span>{prompt.uiConfig.columns.length} columns</span>
+                    <span>{prompt.uiConfig.columns.length} {t('list.columns')}</span>
                     <span>•</span>
-                    <span>Updated {formatDateTime(prompt.updatedAt)}</span>
+                    <span>{t('list.updated', { date: formatDateTime(prompt.updatedAt) })}</span>
                   </div>
                 </div>
 
@@ -97,7 +99,7 @@ export const PromptList = ({ prompts, onCreateNew, onEdit }: PromptListProps) =>
                       variant="ghost"
                       onClick={() => handleSetActive(prompt.id)}
                     >
-                      Set Active
+                      {t('list.setActive')}
                     </Button>
                   )}
                   <Button

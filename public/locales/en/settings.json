@@ -1,0 +1,35 @@
+{
+  "title": "Settings",
+  "openai": {
+    "title": "OpenAI Configuration",
+    "apiKey": "API Key",
+    "apiKeyPlaceholder": "Enter your OpenAI API key",
+    "apiKeyHelp": "Your API key is stored locally in your browser and never sent to our servers.",
+    "apiKeyRequired": "OpenAI API key is required to process documents",
+    "apiKeyInvalid": "Invalid API key format",
+    "apiKeySaved": "API key saved",
+    "getKey": "Get API Key",
+    "model": "Model",
+    "modelHelp": "GPT-4o is recommended for best results with document processing"
+  },
+  "language": {
+    "title": "Language",
+    "label": "Interface Language",
+    "english": "English",
+    "french": "Français"
+  },
+  "theme": {
+    "title": "Appearance",
+    "label": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "storage": {
+    "title": "Storage",
+    "used": "Storage used",
+    "clearData": "Clear All Data",
+    "clearConfirm": "This will delete all documents, prompts, and results. Are you sure?",
+    "cleared": "All data cleared"
+  }
+}

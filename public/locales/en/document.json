@@ -1,0 +1,41 @@
+{
+  "import": {
+    "title": "Import Documents",
+    "dropzone": "Drag & drop documents here, or click to select",
+    "dropzoneActive": "Drop files here...",
+    "supportedFormats": "Supports PDF and images (JPG, PNG, WebP)",
+    "uploading": "Uploading...",
+    "success": "{{count}} document(s) imported",
+    "error": "Failed to import documents",
+    "invalidType": "Invalid file type. Only PDF and images are supported.",
+    "unsupportedType": "{{name}}: Unsupported file type",
+    "added": "Added: {{name}}",
+    "removed": "Document removed",
+    "documentCount": "Documents ({{count}})"
+  },
+  "viewer": {
+    "title": "Document Viewer",
+    "description": "View processed documents",
+    "noDocument": "No document selected",
+    "noDocuments": "No documents to display. Process documents to view them here.",
+    "noActivePrompt": "No active prompt selected.",
+    "documentNotFound": "Document not found.",
+    "documentCount": "Document {{current}} of {{total}}",
+    "page": "Page {{current}} of {{total}}",
+    "zoom": "Zoom",
+    "zoomIn": "Zoom In",
+    "zoomOut": "Zoom Out",
+    "pageNotFound": "Page not found",
+    "loading": "Loading document..."
+  },
+  "list": {
+    "title": "Documents",
+    "empty": "No documents imported yet",
+    "name": "Name",
+    "type": "Type",
+    "status": "Status",
+    "actions": "Actions",
+    "deleteConfirm": "Delete this document?",
+    "processing": "Processing {{current}} of {{total}}"
+  }
+}

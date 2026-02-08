@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -13,6 +14,7 @@ import { PromptList } from './PromptList';
 import { PromptEditor } from './PromptEditor';
 
 export const PromptManager = () => {
+  const { t } = useTranslation('prompt');
   const isOpen = useStore((state) => state.isPromptManagerOpen);
   const setOpen = useStore((state) => state.setPromptManagerOpen);
   const prompts = useStore((state) => state.prompts);
@@ -48,17 +50,17 @@ export const PromptManager = () => {
     <Dialog open={isOpen} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader>
-          <DialogTitle>Prompt Manager</DialogTitle>
+          <DialogTitle>{t('manager.title')}</DialogTitle>
           <DialogDescription>
-            Create and manage prompts with JSON schemas for document processing.
+            {t('manager.description')}
           </DialogDescription>
         </DialogHeader>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="list">Saved Prompts</TabsTrigger>
+            <TabsTrigger value="list">{t('manager.tabs.list')}</TabsTrigger>
             <TabsTrigger value="editor">
-              {editingPromptId ? 'Edit Prompt' : 'Create New'}
+              {editingPromptId ? t('manager.tabs.editPrompt') : t('manager.tabs.editor')}
             </TabsTrigger>
           </TabsList>
 

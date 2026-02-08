@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -19,6 +20,7 @@ interface PromptEditorProps {
 }
 
 export const PromptEditor = ({ promptId, onSaved, onCancel }: PromptEditorProps) => {
+  const { t } = useTranslation(['prompt', 'common']);
   const addPrompt = useStore((state) => state.addPrompt);
   const updatePrompt = useStore((state) => state.updatePrompt);
 
@@ -51,15 +53,15 @@ export const PromptEditor = ({ promptId, onSaved, onCancel }: PromptEditorProps)
     const newErrors: Record<string, string> = {};
 
     if (!name.trim()) {
-      newErrors.name = 'Name is required';
+      newErrors.name = t('prompt:editor.validation.nameRequired');
     }
 
     if (!systemPrompt.trim()) {
-      newErrors.systemPrompt = 'System prompt is required';
+      newErrors.systemPrompt = t('prompt:editor.validation.systemPromptRequired');
     }
 
     if (!isValidJsonSchema(schema)) {
-      newErrors.schema = 'Invalid JSON schema format';
+      newErrors.schema = t('prompt:editor.validation.schemaInvalid');
     }
 
     setErrors(newErrors);
@@ -68,7 +70,7 @@ export const PromptEditor = ({ promptId, onSaved, onCancel }: PromptEditorProps)
 
   const handleSave = async () => {
     if (!validate()) {
-      toast.error('Please fix validation errors');
+      toast.error(t('prompt:editor.validation.fixErrors'));
       return;
     }
 
@@ -94,15 +96,15 @@ export const PromptEditor = ({ promptId, onSaved, onCancel }: PromptEditorProps)
 
       if (promptId) {
         updatePrompt(promptId, prompt);
-        toast.success('Prompt updated');
+        toast.success(t('prompt:editor.success.updated'));
       } else {
         addPrompt(prompt);
-        toast.success('Prompt created');
+        toast.success(t('prompt:editor.success.created'));
       }
 
       onSaved();
     } catch (error) {
-      toast.error('Failed to save prompt');
+      toast.error(t('prompt:editor.error.save'));
     }
   };
 
@@ -110,12 +112,12 @@ export const PromptEditor = ({ promptId, onSaved, onCancel }: PromptEditorProps)
     <div className="space-y-6">
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="name">Prompt Name *</Label>
+          <Label htmlFor="name">{t('prompt:editor.name')} *</Label>
           <Input
             id="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="e.g., Invoice Data Extraction"
+            placeholder={t('prompt:editor.namePlaceholder')}
           />
           {errors.name && (
             <p className="text-sm text-destructive">{errors.name}</p>
@@ -123,22 +125,22 @@ export const PromptEditor = ({ promptId, onSaved, onCancel }: PromptEditorProps)
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="description">Description</Label>
+          <Label htmlFor="description">{t('prompt:editor.description')}</Label>
           <Input
             id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Optional description"
+            placeholder={t('prompt:editor.descriptionPlaceholder')}
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="system-prompt">System Prompt *</Label>
+          <Label htmlFor="system-prompt">{t('prompt:editor.systemPrompt')} *</Label>
           <Textarea
             id="system-prompt"
             value={systemPrompt}
             onChange={(e) => setSystemPrompt(e.target.value)}
-            placeholder="Instructions for AI. e.g., 'Extract all invoice information from the document including invoice number, date, customer details, and line items.'"
+            placeholder={t('prompt:editor.systemPromptPlaceholder')}
             className="min-h-[100px]"
           />
           {errors.systemPrompt && (
@@ -147,23 +149,23 @@ export const PromptEditor = ({ promptId, onSaved, onCancel }: PromptEditorProps)
         </div>
 
         <div className="space-y-2">
-          <Label>JSON Schema *</Label>
+          <Label>{t('prompt:editor.jsonSchema')} *</Label>
           <SchemaBuilder schema={schema} onChange={setSchema} />
           {errors.schema && (
             <p className="text-sm text-destructive">{errors.schema}</p>
           )}
           <p className="text-xs text-muted-foreground">
-            Define the structure of data to extract. Table columns will be generated automatically from the schema.
+            {t('prompt:editor.schemaHelp')}
           </p>
         </div>
       </div>
 
       <div className="flex gap-2 justify-end">
         <Button variant="outline" onClick={onCancel}>
-          Cancel
+          {t('common:buttons.cancel')}
         </Button>
         <Button onClick={handleSave}>
-          {promptId ? 'Update' : 'Create'} Prompt
+          {promptId ? t('common:buttons.update') : t('common:buttons.create')} {t('prompt:manager.title').split(' ')[0]}
         </Button>
       </div>
     </div>

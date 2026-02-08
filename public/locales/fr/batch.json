@@ -1,0 +1,55 @@
+{
+  "title": "Traitement par Lots",
+  "activePrompt": "Prompt Actif : {{name}}",
+  "readyToProcess": "{{count}} document(s) prêt(s) à traiter",
+  "processDocuments": "Traiter les Documents",
+  "selectPrompt": "Sélectionner un Prompt",
+  "selectPromptHelp": "Choisissez un modèle de prompt pour traiter vos documents",
+  "noPrompts": "Aucun prompt disponible",
+  "createPrompt": "Créez d'abord un prompt",
+  "startProcessing": "Démarrer le Traitement",
+  "stopProcessing": "Arrêter le Traitement",
+  "pauseProcessing": "Mettre en Pause",
+  "resumeProcessing": "Reprendre le Traitement",
+  "retryFailed": "Réessayer les Échecs",
+  "progress": {
+    "title": "Progression du Traitement",
+    "processing": "Traitement en cours...",
+    "current": "En cours : {{name}}",
+    "completed": "Terminé",
+    "completedCount": "✓ Terminé : {{count}}",
+    "failed": "Échoué",
+    "failedCount": "✗ Échoué : {{count}}",
+    "pending": "En attente",
+    "of": "sur",
+    "documents": "documents",
+    "allCompleted": "Tous les documents ont été traités avec succès",
+    "someErrors": "Traitement terminé avec {{count}} erreur(s)",
+    "converting": "Conversion du document en images...",
+    "extracting": "Extraction des données...",
+    "validating": "Validation des résultats...",
+    "saving": "Enregistrement des résultats..."
+  },
+  "errors": {
+    "noApiKey": "Veuillez définir votre clé API OpenAI dans les Paramètres",
+    "noActivePrompt": "Veuillez sélectionner un prompt actif",
+    "noActivePromptMessage": "Aucun prompt actif sélectionné. Créez et sélectionnez un prompt pour traiter les documents.",
+    "noDocuments": "Aucun document à traiter",
+    "noPrompt": "Veuillez sélectionner un prompt",
+    "processingFailed": "Le traitement a échoué",
+    "conversionFailed": "Échec de la conversion du document",
+    "apiError": "Erreur API : {{message}}",
+    "validationFailed": "La validation a échoué"
+  },
+  "results": {
+    "title": "Résultats du Traitement",
+    "viewResults": "Voir les Résultats",
+    "downloadResults": "Télécharger les Résultats",
+    "clearResults": "Effacer les Résultats"
+  },
+  "messages": {
+    "processed": "Traité : {{name}}",
+    "failed": "Échoué : {{name}}",
+    "batchComplete": "Traitement par lots terminé !"
+  }
+}
