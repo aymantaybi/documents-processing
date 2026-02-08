@@ -3,6 +3,7 @@
   "activePrompt": "Active Prompt: {{name}}",
   "readyToProcess": "{{count}} document(s) ready to process",
   "processDocuments": "Process Documents",
+  "exportToExcel": "Export to Excel",
   "selectPrompt": "Select a Prompt",
   "selectPromptHelp": "Choose a prompt template to process your documents",
   "noPrompts": "No prompts available",
@@ -39,7 +40,8 @@
     "processingFailed": "Processing failed",
     "conversionFailed": "Failed to convert document",
     "apiError": "API error: {{message}}",
-    "validationFailed": "Validation failed"
+    "validationFailed": "Validation failed",
+    "exportFailed": "Failed to export data to Excel"
   },
   "results": {
     "title": "Processing Results",
@@ -50,6 +52,7 @@
   "messages": {
     "processed": "Processed: {{name}}",
     "failed": "Failed: {{name}}",
-    "batchComplete": "Batch processing complete!"
+    "batchComplete": "Batch processing complete!",
+    "exported": "Data exported to Excel successfully!"
   }
 }

@@ -3,6 +3,7 @@
   "activePrompt": "Prompt Actif : {{name}}",
   "readyToProcess": "{{count}} document(s) prêt(s) à traiter",
   "processDocuments": "Traiter les Documents",
+  "exportToExcel": "Exporter vers Excel",
   "selectPrompt": "Sélectionner un Prompt",
   "selectPromptHelp": "Choisissez un modèle de prompt pour traiter vos documents",
   "noPrompts": "Aucun prompt disponible",
@@ -39,7 +40,8 @@
     "processingFailed": "Le traitement a échoué",
     "conversionFailed": "Échec de la conversion du document",
     "apiError": "Erreur API : {{message}}",
-    "validationFailed": "La validation a échoué"
+    "validationFailed": "La validation a échoué",
+    "exportFailed": "Échec de l'exportation des données vers Excel"
   },
   "results": {
     "title": "Résultats du Traitement",
@@ -50,6 +52,7 @@
   "messages": {
     "processed": "Traité : {{name}}",
     "failed": "Échoué : {{name}}",
-    "batchComplete": "Traitement par lots terminé !"
+    "batchComplete": "Traitement par lots terminé !",
+    "exported": "Données exportées vers Excel avec succès !"
   }
 }

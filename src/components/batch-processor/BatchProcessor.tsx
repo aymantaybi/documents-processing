@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Play, AlertCircle } from 'lucide-react';
+import { Play, AlertCircle, FileSpreadsheet } from 'lucide-react';
 import { useStore } from '@/store';
 import { processDocument } from '@/services/openai/processor';
 import { convertPDFToImages } from '@/services/pdf/converter';
@@ -12,6 +12,7 @@ import { saveDocument } from '@/services/storage/documents';
 import { saveResult } from '@/services/storage/results';
 import { isOpenAIInitialized } from '@/services/openai/client';
 import { validateAgainstSchema } from '@/services/validation/validator';
+import { exportToExcel } from '@/utils/export';
 import toast from 'react-hot-toast';
 
 export const BatchProcessor = () => {
@@ -21,6 +22,7 @@ export const BatchProcessor = () => {
   const prompts = useStore((state) => state.prompts);
   const updateDocument = useStore((state) => state.updateDocument);
   const setResult = useStore((state) => state.setResult);
+  const results = useStore((state) => state.results);
   const rateLimit = useStore((state) => state.rateLimit);
 
   const [isProcessing, setIsProcessing] = useState(false);
@@ -29,6 +31,7 @@ export const BatchProcessor = () => {
 
   const activePrompt = prompts.find((p) => p.id === activePromptId);
   const pendingDocs = documents.filter((d) => d.status === 'pending' && d.selected);
+  const completedDocs = documents.filter((d) => d.status === 'completed' && results[d.id]);
 
   const handleProcess = async () => {
     if (!isOpenAIInitialized()) {
@@ -135,6 +138,19 @@ export const BatchProcessor = () => {
     toast.success(t('messages.batchComplete'));
   };
 
+  const handleExport = () => {
+    try {
+      exportToExcel(documents, results, {
+        includeDocumentInfo: true,
+        useEditedData: true,
+      });
+      toast.success(t('messages.exported'));
+    } catch (error: any) {
+      console.error('Export error:', error);
+      toast.error(error.message || t('errors.exportFailed'));
+    }
+  };
+
   if (!activePrompt) {
     return (
       <Card>
@@ -164,13 +180,24 @@ export const BatchProcessor = () => {
             <div className="text-sm text-muted-foreground">
               {t('readyToProcess', { count: pendingDocs.length })}
             </div>
-            <Button
-              onClick={handleProcess}
-              disabled={pendingDocs.length === 0 || !isOpenAIInitialized()}
-            >
-              <Play className="mr-2 h-4 w-4" />
-              {t('processDocuments')}
-            </Button>
+            <div className="flex gap-2">
+              {completedDocs.length > 0 && (
+                <Button
+                  variant="outline"
+                  onClick={handleExport}
+                >
+                  <FileSpreadsheet className="mr-2 h-4 w-4" />
+                  {t('exportToExcel')}
+                </Button>
+              )}
+              <Button
+                onClick={handleProcess}
+                disabled={pendingDocs.length === 0 || !isOpenAIInitialized()}
+              >
+                <Play className="mr-2 h-4 w-4" />
+                {t('processDocuments')}
+              </Button>
+            </div>
           </div>
         )}
 
