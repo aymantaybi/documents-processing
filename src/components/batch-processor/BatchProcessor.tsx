@@ -28,7 +28,7 @@ export const BatchProcessor = () => {
   const [currentDoc, setCurrentDoc] = useState<string | null>(null);
 
   const activePrompt = prompts.find((p) => p.id === activePromptId);
-  const pendingDocs = documents.filter((d) => d.status === 'pending');
+  const pendingDocs = documents.filter((d) => d.status === 'pending' && d.selected);
 
   const handleProcess = async () => {
     if (!isOpenAIInitialized()) {
@@ -97,15 +97,17 @@ export const BatchProcessor = () => {
         await saveResult(extractedData);
         setResult(doc.id, extractedData);
 
-        // Update document status
+        // Update document status and deselect
         updateDocument(doc.id, {
           status: 'completed',
           processedAt: new Date(),
+          selected: false,
         });
         await saveDocument({
           ...doc,
           status: 'completed',
           processedAt: new Date(),
+          selected: false,
         });
 
         setProgress((prev) => ({ ...prev, completed: prev.completed + 1 }));

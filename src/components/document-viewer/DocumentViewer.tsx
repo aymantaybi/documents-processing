@@ -103,7 +103,7 @@ export const DocumentViewer = ({ promptId }: DocumentViewerProps) => {
     : 1;
 
   return (
-    <Card className="flex flex-col h-[calc(100vh-20rem)]">
+    <Card className="flex flex-col h-full">
       <CardHeader className="flex-shrink-0">
         <div className="flex items-center justify-between">
           <div>

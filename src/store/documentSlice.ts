@@ -8,6 +8,7 @@ export interface DocumentSlice {
   addDocument: (document: Document) => void;
   updateDocument: (id: string, updates: Partial<Document>) => void;
   removeDocument: (id: string) => void;
+  toggleDocumentSelection: (id: string) => void;
   getDocument: (id: string) => Document | undefined;
   setResult: (documentId: string, result: ExtractedData) => void;
   updateResult: (documentId: string, editedData: Record<string, unknown>) => void;
@@ -40,6 +41,13 @@ export const createDocumentSlice: StateCreator<DocumentSlice> = (set, get) => ({
         results: remainingResults,
       };
     }),
+
+  toggleDocumentSelection: (id) =>
+    set((state) => ({
+      documents: state.documents.map((doc) =>
+        doc.id === id ? { ...doc, selected: !doc.selected } : doc
+      ),
+    })),
 
   getDocument: (id) => get().documents.find((doc) => doc.id === id),
 

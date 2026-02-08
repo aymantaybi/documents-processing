@@ -12,6 +12,7 @@ export interface Document {
   processedAt?: Date;
   status: DocumentStatus;
   error?: string;
+  selected?: boolean; // For batch processing selection
 }
 
 export interface ProcessedDocument extends Document {

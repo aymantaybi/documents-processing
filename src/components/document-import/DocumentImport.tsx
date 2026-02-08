@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useDropzone } from 'react-dropzone';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Upload, FileText, X } from 'lucide-react';
+import { Upload, FileText, X, CheckCircle2, Circle } from 'lucide-react';
 import { useStore } from '@/store';
 import { saveDocument } from '@/services/storage/documents';
 import { validateDocumentFile, getDocumentType } from '@/services/pdf/loader';
@@ -15,6 +15,7 @@ export const DocumentImport = () => {
   const documents = useStore((state) => state.documents);
   const addDocument = useStore((state) => state.addDocument);
   const removeDocument = useStore((state) => state.removeDocument);
+  const toggleDocumentSelection = useStore((state) => state.toggleDocumentSelection);
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -37,6 +38,7 @@ export const DocumentImport = () => {
           file,
           uploadedAt: new Date(),
           status: 'pending' as const,
+          selected: true, // Selected by default
         };
 
         await saveDocument(document);
@@ -113,14 +115,29 @@ export const DocumentImport = () => {
                       </p>
                     </div>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleRemove(doc.id)}
-                    className="flex-shrink-0"
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => toggleDocumentSelection(doc.id)}
+                      className="flex-shrink-0"
+                      disabled={doc.status !== 'pending'}
+                    >
+                      {doc.selected ? (
+                        <CheckCircle2 className="h-5 w-5 text-blue-600" />
+                      ) : (
+                        <Circle className="h-5 w-5 text-muted-foreground" />
+                      )}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleRemove(doc.id)}
+                      className="flex-shrink-0"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>

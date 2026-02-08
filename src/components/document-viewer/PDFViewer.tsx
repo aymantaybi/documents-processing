@@ -29,8 +29,8 @@ export const PDFViewer = ({ imageData, pageNumber }: PDFViewerProps) => {
   };
 
   return (
-    <div className="w-full space-y-4">
-      <div className="flex items-center justify-center gap-2">
+    <div className="w-full h-full flex flex-col gap-4">
+      <div className="flex items-center justify-center gap-2 flex-shrink-0">
         <Button
           variant="outline"
           size="sm"
@@ -51,7 +51,7 @@ export const PDFViewer = ({ imageData, pageNumber }: PDFViewerProps) => {
           <ZoomIn className="h-4 w-4" />
         </Button>
       </div>
-      <div className="flex items-center justify-center overflow-auto max-h-[700px]">
+      <div className="flex items-center justify-center overflow-auto flex-1 min-h-0">
         <img
           src={currentImage}
           alt={`Page ${pageNumber}`}
