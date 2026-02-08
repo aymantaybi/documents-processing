@@ -3,12 +3,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Prompt, JSONSchema, UIConfig } from '@/types';
+import { SchemaBuilder } from './SchemaBuilder';
+import { Prompt, JSONSchema } from '@/types';
 import { useStore } from '@/store';
 import { savePrompt, getPrompt } from '@/services/storage/prompts';
 import { createDefaultSchema } from '@/services/validation/schema';
 import { isValidJsonSchema } from '@/services/validation/validator';
+import { generateColumnsFromSchema } from '@/utils/schemaToColumns';
 import toast from 'react-hot-toast';
 
 interface PromptEditorProps {
@@ -17,18 +18,6 @@ interface PromptEditorProps {
   onCancel: () => void;
 }
 
-const defaultUIConfig: UIConfig = {
-  columns: [
-    {
-      key: 'field1',
-      label: 'Field 1',
-      editable: true,
-      type: 'text',
-    },
-  ],
-  nestedRenderStrategy: 'expandable',
-};
-
 export const PromptEditor = ({ promptId, onSaved, onCancel }: PromptEditorProps) => {
   const addPrompt = useStore((state) => state.addPrompt);
   const updatePrompt = useStore((state) => state.updatePrompt);
@@ -36,12 +25,7 @@ export const PromptEditor = ({ promptId, onSaved, onCancel }: PromptEditorProps)
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [systemPrompt, setSystemPrompt] = useState('');
-  const [schemaText, setSchemaText] = useState(
-    JSON.stringify(createDefaultSchema(), null, 2)
-  );
-  const [columns, setColumns] = useState<UIConfig['columns']>(
-    defaultUIConfig.columns
-  );
+  const [schema, setSchema] = useState<JSONSchema>(createDefaultSchema());
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -51,8 +35,7 @@ export const PromptEditor = ({ promptId, onSaved, onCancel }: PromptEditorProps)
           setName(prompt.name);
           setDescription(prompt.description || '');
           setSystemPrompt(prompt.systemPrompt);
-          setSchemaText(JSON.stringify(prompt.jsonSchema, null, 2));
-          setColumns(prompt.uiConfig.columns);
+          setSchema(prompt.jsonSchema);
         }
       });
     } else {
@@ -60,8 +43,7 @@ export const PromptEditor = ({ promptId, onSaved, onCancel }: PromptEditorProps)
       setName('');
       setDescription('');
       setSystemPrompt('');
-      setSchemaText(JSON.stringify(createDefaultSchema(), null, 2));
-      setColumns(defaultUIConfig.columns);
+      setSchema(createDefaultSchema());
     }
   }, [promptId]);
 
@@ -76,17 +58,8 @@ export const PromptEditor = ({ promptId, onSaved, onCancel }: PromptEditorProps)
       newErrors.systemPrompt = 'System prompt is required';
     }
 
-    try {
-      const schema = JSON.parse(schemaText);
-      if (!isValidJsonSchema(schema)) {
-        newErrors.schema = 'Invalid JSON schema format';
-      }
-    } catch {
-      newErrors.schema = 'Invalid JSON';
-    }
-
-    if (columns.length === 0) {
-      newErrors.columns = 'At least one column is required';
+    if (!isValidJsonSchema(schema)) {
+      newErrors.schema = 'Invalid JSON schema format';
     }
 
     setErrors(newErrors);
@@ -100,7 +73,8 @@ export const PromptEditor = ({ promptId, onSaved, onCancel }: PromptEditorProps)
     }
 
     try {
-      const schema: JSONSchema = JSON.parse(schemaText);
+      // Auto-generate columns from schema
+      const columns = generateColumnsFromSchema(schema);
 
       const prompt: Prompt = {
         id: promptId || `${Date.now()}-${Math.random()}`,
@@ -130,28 +104,6 @@ export const PromptEditor = ({ promptId, onSaved, onCancel }: PromptEditorProps)
     } catch (error) {
       toast.error('Failed to save prompt');
     }
-  };
-
-  const handleAddColumn = () => {
-    setColumns([
-      ...columns,
-      {
-        key: '',
-        label: '',
-        editable: true,
-        type: 'text',
-      },
-    ]);
-  };
-
-  const handleUpdateColumn = (index: number, updates: Partial<UIConfig['columns'][0]>) => {
-    const newColumns = [...columns];
-    newColumns[index] = { ...newColumns[index], ...updates };
-    setColumns(newColumns);
-  };
-
-  const handleRemoveColumn = (index: number) => {
-    setColumns(columns.filter((_, i) => i !== index));
   };
 
   return (
@@ -195,69 +147,15 @@ export const PromptEditor = ({ promptId, onSaved, onCancel }: PromptEditorProps)
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="schema">JSON Schema *</Label>
-          <Textarea
-            id="schema"
-            value={schemaText}
-            onChange={(e) => setSchemaText(e.target.value)}
-            placeholder="JSON schema for the extracted data"
-            className="min-h-[200px] font-mono text-xs"
-          />
+          <Label>JSON Schema *</Label>
+          <SchemaBuilder schema={schema} onChange={setSchema} />
           {errors.schema && (
             <p className="text-sm text-destructive">{errors.schema}</p>
           )}
           <p className="text-xs text-muted-foreground">
-            Define the structure of data to extract. Must be a valid JSON Schema with
-            type "object".
+            Define the structure of data to extract. Table columns will be generated automatically from the schema.
           </p>
         </div>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Table Columns</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {columns.map((column, index) => (
-              <div key={index} className="flex gap-2 items-start">
-                <div className="flex-1 space-y-2">
-                  <Input
-                    placeholder="Key (e.g., customer.name)"
-                    value={column.key}
-                    onChange={(e) =>
-                      handleUpdateColumn(index, { key: e.target.value })
-                    }
-                  />
-                  <Input
-                    placeholder="Label (e.g., Customer Name)"
-                    value={column.label}
-                    onChange={(e) =>
-                      handleUpdateColumn(index, { label: e.target.value })
-                    }
-                  />
-                </div>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleRemoveColumn(index)}
-                >
-                  <span className="text-lg">×</span>
-                </Button>
-              </div>
-            ))}
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={handleAddColumn}
-            >
-              Add Column
-            </Button>
-            {errors.columns && (
-              <p className="text-sm text-destructive">{errors.columns}</p>
-            )}
-          </CardContent>
-        </Card>
       </div>
 
       <div className="flex gap-2 justify-end">

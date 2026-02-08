@@ -19,6 +19,7 @@ export interface JSONSchemaProperty {
   type: 'string' | 'number' | 'boolean' | 'object' | 'array' | 'null';
   description?: string;
   properties?: Record<string, JSONSchemaProperty>; // For nested objects
+  required?: string[]; // For nested objects
   items?: JSONSchemaProperty; // For arrays
   enum?: Array<string | number>; // For enum types
   format?: string; // For date, email, etc.
