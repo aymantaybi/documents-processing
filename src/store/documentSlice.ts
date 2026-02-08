@@ -13,6 +13,7 @@ export interface DocumentSlice {
   setResult: (documentId: string, result: ExtractedData) => void;
   updateResult: (documentId: string, editedData: Record<string, unknown>) => void;
   getResult: (documentId: string) => ExtractedData | undefined;
+  clearAllResults: () => void;
 }
 
 export const createDocumentSlice: StateCreator<DocumentSlice> = (set, get) => ({
@@ -69,4 +70,14 @@ export const createDocumentSlice: StateCreator<DocumentSlice> = (set, get) => ({
     }),
 
   getResult: (documentId) => get().results[documentId],
+
+  clearAllResults: () =>
+    set((state) => ({
+      results: {},
+      documents: state.documents.map((doc) =>
+        doc.status === 'completed'
+          ? { ...doc, status: 'pending', processedAt: undefined, selected: true }
+          : doc
+      ),
+    })),
 });

@@ -53,6 +53,7 @@
     "processed": "Processed: {{name}}",
     "failed": "Failed: {{name}}",
     "batchComplete": "Batch processing complete!",
-    "exported": "Data exported to Excel successfully!"
+    "exported": "Data exported to Excel successfully!",
+    "promptChanged": "Prompt changed - previous results cleared. Documents are ready to reprocess."
   }
 }

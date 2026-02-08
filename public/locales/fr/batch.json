@@ -53,6 +53,7 @@
     "processed": "Traité : {{name}}",
     "failed": "Échoué : {{name}}",
     "batchComplete": "Traitement par lots terminé !",
-    "exported": "Données exportées vers Excel avec succès !"
+    "exported": "Données exportées vers Excel avec succès !",
+    "promptChanged": "Prompt modifié - résultats précédents effacés. Les documents sont prêts à être retraités."
   }
 }

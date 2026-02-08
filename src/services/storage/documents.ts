@@ -51,3 +51,24 @@ export const deleteAllDocuments = async (): Promise<void> => {
   await tx.objectStore('documents').clear();
   await tx.done;
 };
+
+export const resetCompletedDocuments = async (): Promise<void> => {
+  const db = await getDB();
+  const documents = await db.getAll('documents');
+
+  const tx = db.transaction('documents', 'readwrite');
+  const store = tx.objectStore('documents');
+
+  for (const doc of documents) {
+    if (doc.status === 'completed') {
+      await store.put({
+        ...doc,
+        status: 'pending',
+        processedAt: undefined,
+        selected: true,
+      });
+    }
+  }
+
+  await tx.done;
+};

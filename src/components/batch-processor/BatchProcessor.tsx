@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -8,8 +8,8 @@ import { useStore } from '@/store';
 import { processDocument } from '@/services/openai/processor';
 import { convertPDFToImages } from '@/services/pdf/converter';
 import { loadImageAsBase64 } from '@/services/pdf/loader';
-import { saveDocument } from '@/services/storage/documents';
-import { saveResult } from '@/services/storage/results';
+import { saveDocument, resetCompletedDocuments } from '@/services/storage/documents';
+import { saveResult, deleteAllResults } from '@/services/storage/results';
 import { isOpenAIInitialized } from '@/services/openai/client';
 import { validateAgainstSchema } from '@/services/validation/validator';
 import { exportToExcel } from '@/utils/export';
@@ -24,14 +24,38 @@ export const BatchProcessor = () => {
   const setResult = useStore((state) => state.setResult);
   const results = useStore((state) => state.results);
   const rateLimit = useStore((state) => state.rateLimit);
+  const clearAllResults = useStore((state) => state.clearAllResults);
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState({ completed: 0, failed: 0, total: 0 });
   const [currentDoc, setCurrentDoc] = useState<string | null>(null);
 
+  const prevActivePromptIdRef = useRef<string | null>(activePromptId);
+
   const activePrompt = prompts.find((p) => p.id === activePromptId);
   const pendingDocs = documents.filter((d) => d.status === 'pending' && d.selected);
   const completedDocs = documents.filter((d) => d.status === 'completed' && results[d.id]);
+
+  // Handle active prompt change - clear results and reset documents
+  useEffect(() => {
+    const prevPromptId = prevActivePromptIdRef.current;
+
+    // Only clear if:
+    // 1. Previous prompt was set (not initial mount)
+    // 2. Active prompt has changed
+    // 3. There are results to clear
+    if (prevPromptId && prevPromptId !== activePromptId && Object.keys(results).length > 0) {
+      // Clear results and reset document statuses
+      clearAllResults();
+      deleteAllResults();
+      resetCompletedDocuments();
+
+      toast.success(t('messages.promptChanged'));
+    }
+
+    // Update ref for next comparison
+    prevActivePromptIdRef.current = activePromptId;
+  }, [activePromptId, results, clearAllResults, t]);
 
   const handleProcess = async () => {
     if (!isOpenAIInitialized()) {
